@@ -58,16 +58,17 @@ public class WarGame extends Game {
             ArrayList<WarCard> pile = new ArrayList<>();
             playRound(player1, player2, pile);
         }
-        
+        declareWinner();
     }
     //the specifics of each round is handled in this class
     //private because its started from game logic.
     private void playRound(WarPlayer player1, WarPlayer player2, ArrayList<WarCard> pile){
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(WarGame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        System.out.println("\n==================== ROUND START ====================");
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(WarGame.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         WarCard card1 = player1.drawCard();
         WarCard card2 = player2.drawCard();
         
@@ -77,7 +78,8 @@ public class WarGame extends Game {
         pile.add(card1);
         pile.add(card2);
         
-        System.out.println(player1.getName() + " plays " + card1 + " | " + player2.getName() + " plays " + card2);
+        System.out.println(" > " + player1.getName() + " plays: [" + card1 + "]");
+        System.out.println(" > " + player2.getName() + " plays: [" + card2 + "]");
         
         if(card1.getRank().getValue() > card2.getRank().getValue()){
             player1.addCards(pile);
@@ -89,20 +91,33 @@ public class WarGame extends Game {
             System.out.println("WAR!");
             //rules of war handled outside this class for SRP
             beginWar(player1, player2, pile);
+            return ;
         }
-        
-    }
+        //*displays the amount of cards each player has at the end of round
+        System.out.println("----------------------------------------------------");
+        System.out.println("SCORE: " + player1.getName() + " [" + player1.getHandSize() + "] Cards| " 
+                             + player2.getName() + " [" + player2.getHandSize() + "] Cards");
+        System.out.println("===================== ROUND END =====================\n");
+}
+    
+    
     //private because the begginning of war is determined by the game logic.s
     private void beginWar(WarPlayer player1, WarPlayer player2, ArrayList<WarCard> pile){
         //each player must have at least three cards to play
         //if requirement is not meant, a winner is declared.
+        System.out.println("\n!!!!!!!!!!!!!!!!!   WAR DECLARED!   !!!!!!!!!!!!!!!!");
+        
+        
         if(player1.getHandSize() > 3 && player2.getHandSize() > 3){
+            System.out.println("Each player places 3 cards face down.");
             for (int i = 0; i < 3; i++){
                 if(player1.getHandSize() > 1) 
                     pile.add(player1.drawCard());
                 if(player2.getHandSize() > 1)
                     pile.add(player2.drawCard());
             }
+            System.out.println("Total cards in the pot: " + pile.size());
+            System.out.println("Revealing the tie-breaker:");
             playRound(player1, player2, pile);
         }else{
             declareWinner();
@@ -120,13 +135,18 @@ public class WarGame extends Game {
         WarPlayer player1 = (WarPlayer) getPlayers().get(0);
         WarPlayer player2 = (WarPlayer) getPlayers().get(1);
         
-        if(player1.getHandSize() > player2.getHandSize()){
-            System.out.println("GAME OVER: " + player1.getName() + " WINS THE WAR!");
-        }else{
-            System.out.println("GAME OVER: " + player2.getName() + " WINS THE WAR!");
-        }
+        String winnerName = (player1.getHandSize() > player2.getHandSize()) 
+                            ? player1.getName() : player2.getName();
+
+    System.out.println("\n\n****************************************************");
+    System.out.println("          THE WAR HAS ENDED!          ");
+    System.out.println("          WINNER: " + winnerName + "          ");
+    System.out.println("****************************************************\n");
         
     }
+    //display cards
+    //make war output clear
+    //show player winning game
     
     
 }

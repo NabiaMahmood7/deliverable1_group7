@@ -24,6 +24,6 @@ public class WarMain {
         
         myGame.setPlayers(players);
         myGame.play();
-        
+      
     }
 }
